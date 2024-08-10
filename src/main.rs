@@ -4,7 +4,7 @@ use lambda_http::{
     Body, Error, Request, Response,
 };
 use octocrab::{models::issues::Issue, params::State, Octocrab};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json;
 use std::env;
 
@@ -33,7 +33,7 @@ impl RepoInfo {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct KudosIssue {
     title: String,
     html_url: String,
@@ -60,8 +60,8 @@ struct Payload {
 }
 
 async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
-    let body = event.body();
-    let json_string = (match body {
+    let request_body = event.body();
+    let json_string = (match request_body {
         Body::Text(json) => Some(json),
         _ => None,
     })
@@ -75,6 +75,8 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let token = env::var("GITHUB_TOKEN")?;
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
+    let mut issue_data: Vec<KudosIssue> = vec![];
+
     for repo in data.repository {
         let repo_info = RepoInfo::from_url(&repo.url)
             .ok_or_else(|| Error::from("Couldn't extract repo info from url"))?;
@@ -87,7 +89,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
             .send()
             .await?;
 
-        let filtered_issues: Vec<KudosIssue> = page
+        let mut filtered_issues: Vec<KudosIssue> = page
             .items
             .into_iter()
             .filter_map(|issue| {
@@ -97,12 +99,16 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                     .then(|| KudosIssue::from(issue))
             })
             .collect();
+
+        issue_data.append(&mut filtered_issues)
     }
+
+    let response_body = serde_json::to_string(&issue_data)?;
 
     let resp = Response::builder()
         .status(200)
-        .header("content-type", "text/html")
-        .body("Import successful".into())
+        .header("content-type", "application/json")
+        .body(response_body.into())
         .map_err(Box::new)?;
     Ok(resp)
 }
