@@ -36,7 +36,7 @@ struct Project {
 impl Project {
     fn new_project_query(&self) -> &str {
         let query_string = r#"
-        INSERT INTO projects (name, slug, categories, purposes, stack_levels, technologies)
+        INSERT INTO projects (name, slug, types, purposes, stack_levels, technologies)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id;
         "#;
@@ -53,8 +53,8 @@ struct Repository {
 impl Repository {
     fn insert_respository_query(&self) -> &str {
         let query_string = r#"
-        INSERT INTO repositories (slug, project_id)
-        VALUES ($1, $2)
+        INSERT INTO repositories (slug, project_id, url)
+        VALUES ($1, $2, $3)
         RETURNING id;
         "#;
         return query_string;
@@ -153,6 +153,10 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
         let repo_row = sqlx::query(repo_query)
             .bind(&repo.label)
             .bind(project_id)
+            .bind(format!(
+                "https://github.com/{}/{}",
+                &repo_info.owner, &repo_info.name
+            ))
             .fetch_one(&pool)
             .await?;
 
