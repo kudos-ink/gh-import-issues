@@ -1,0 +1,30 @@
+{
+  "name": "Parity Technologies",
+  "slug": "parity",
+  "description": "Solutions for a trust-free world",
+  "links": {
+    "website": [{ "label": "parity.io", "url": "https://parity.io/" }],
+    "docs": [
+      { "label": "github.com/kudos-ink", "url": "https://github.com/kudos-ink" }
+    ],
+    "explorer": [],
+    "repository": [
+      {
+        "label": "metadata-portal",
+        "url": "https://github.com/paritytech/metadata-portal"
+      },
+      {
+        "label": "litep2p",
+        "url": "https://github.com/paritytech/litep2p"
+      }
+    ],
+    "social": [{ "label": "X/Twitter", "url": "https://x.com/paritytech" }]
+  },
+  "attributes": {
+    "networks": [],
+    "purposes": ["data"],
+    "stackLevels": ["messaging"],
+    "technologies": ["typescript", "rust"],
+    "types": []
+  }
+}

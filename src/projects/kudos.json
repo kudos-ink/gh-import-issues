@@ -1,0 +1,27 @@
+{
+  "name": "Kudos Portal",
+  "slug": "kudos",
+  "description": "A Portal for Agile Devtime - The Platform to Connect Teams and Skilled Contributors in the Polkadot Ecosystem.",
+  "links": {
+    "website": [{ "label": "morekudos.com", "url": "https://morekudos.com" }],
+    "docs": [
+      { "label": "github.com/kudos-ink", "url": "https://github.com/kudos-ink" }
+    ],
+    "explorer": [],
+    "repository": [
+      { "label": "portal", "url": "https://github.com/kudos-ink/portal" },
+      {
+        "label": "issues-api",
+        "url": "https://github.com/kudos-ink/issues-api"
+      }
+    ],
+    "social": [{ "label": "X/Twitter", "url": "https://x.com/KudosPortal" }]
+  },
+  "attributes": {
+    "networks": [],
+    "purposes": ["data"],
+    "stackLevels": ["offchain", "messaging"],
+    "technologies": ["typescript", "rust"],
+    "types": ["dApp"]
+  }
+}
